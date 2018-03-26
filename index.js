@@ -320,6 +320,7 @@ class Client {
           }
 
           params.Body = result;
+          params.ContentType = params.ContentType + '; charset=utf-8';
           params.ContentEncoding = 'gzip';
           resolve(params);
         });
