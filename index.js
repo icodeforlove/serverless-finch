@@ -231,21 +231,6 @@ class Client {
     function configureCorsForBucket(){
       this.serverless.cli.log(`Configuring CORS policy for bucket ${this.bucketName}...`);
 
-      let putPostDeleteRule = {
-        AllowedMethods: [
-          'PUT',
-          'POST',
-          'DELETE'
-        ],
-        AllowedOrigins: [
-          'https://*.amazonaws.com'
-        ],
-        AllowedHeaders: [
-          '*'
-        ],
-        MaxAgeSeconds: 0
-      };
-
       let getRule = {
         AllowedMethods: [
           'GET'
@@ -256,17 +241,16 @@ class Client {
         AllowedHeaders: [
           '*'
         ],
-        MaxAgeSeconds: 0
+        MaxAgeSeconds: 3000
       };
 
       let params = {
         Bucket: this.bucketName,
         CORSConfiguration: {
           CORSRules: [
-            putPostDeleteRule,
             getRule
           ]
-        },
+        }
       };
 
       return this.aws.request('S3', 'putBucketCors', params, this.stage, this.region);
@@ -320,8 +304,8 @@ class Client {
           }
 
           params.Body = result;
-          params.ContentType = params.ContentType + '; charset=utf-8';
           params.ContentEncoding = 'gzip';
+          params.ContentType = params.ContentType + '; charset=utf-8';
           resolve(params);
         });
       } else {
